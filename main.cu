@@ -33,15 +33,27 @@ __global__ void AcceleratedGridStrideLoop(int sizeIterable) {
 
 
 int main(void){
-
-    int N = 100000;
     // length of an iterable
+    int N = 100000;
+
+    /* allocate memory
+    size_t size = N * sizeof(int);
+    int *a;
+    cudaMallocManaged(&a, size);
+    */
+
+
+    
     size_t threads_per_block = 256;
     // Ensure there are at least `N` threads in the grid, but only 1 block's worth extra
     size_t number_of_blocks = (N + threads_per_block - 1) / threads_per_block;
 
-    // normalCPU();
-    // kernelTest<<1, 1>>();
     AcceleratedGridStrideLoop<<<number_of_blocks, threads_per_block>>>(N);
     checkCuda(cudaDeviceSynchronize());
+
+    /* free memory if allocated
+    cudaFree();
+    */
+
+    return 0;
 }
