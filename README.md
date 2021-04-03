@@ -39,7 +39,8 @@ cudaStreamCreate(&stream);
 myKernel<<<blocks, threads, 0, stream>>>();
 cudaStreamDestroy(stream);
 ```
-cudaMallocManaged combined with memory prefetching can be very efficient. But a more advance technic can be use to be even more efficient. A more manual way. Instead of tranfering data from DtoH or HtoD (done automatically by cudaMallocManaged) we can use manual copy using `cudaMalloc` and `cudaMallocHost`.  
+cudaMallocManaged combined with memory prefetching can be very efficient. But a more advance technic can be use to be even more efficient. A more manual way. Instead of tranfering data from DtoH or HtoD (done automatically by cudaMallocManaged) we can use manual copy using `cudaMalloc` and `cudaMallocHost` & `cudaMemcpy` wich embed the cudaDeviceSynchronize (no need to it).  
+
   
 ```cpp
 int *host_arr, *device_arr;
