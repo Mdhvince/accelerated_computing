@@ -1,6 +1,6 @@
 #### Notes
 Compile and run : `nvcc -o out dim1operqtions.cu -run`  
-Profiling : `nsys profile --stats=true ./out`  
+Profiling : `nsys profile --stats=true ./out`  after the `--stats=true` if we want to generate a report we can add `-o myreport`  
   
 APOD Design Cycle : Assess, Parallelize, Optimize, Deploy.  
 
@@ -30,3 +30,12 @@ cudaMemPrefetchAsync(arr, size, cudaCpuDeviceId);
 
 ```
 many more Device Info can be found in the doc (cudaDeviceProp Reference)
+
+#### Other Optimizations
+- Use Cuda stream for concurrent kernel execution
+```cu
+cudaStream_t stream;
+cudaStreamCreate(&stream);
+myKernel<<<blocks, threads, 0, stream>>>();
+cudaStreamDestroy(stream);
+```
