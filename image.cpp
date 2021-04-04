@@ -10,11 +10,7 @@ void slidingWindowCPU(cv::Mat img, int h, int w, int stride){
     for(int row=0; row <= img.rows; row+=stride){
         for (int col=0; col <= img.cols; col+=stride){
             cv::Rect windows(col, row, h, w);
-            //cv::Mat Roi = img(windows);
-
-            cv::rectangle(img, windows, cv::Scalar(255), 1, 8, 0);
-            // cv::imshow("Image", img);
-            // cv::waitKey(1);
+            cv::rectangle(img, windows, cv::Scalar(row, col, 0), 1, 8, 0);
         }
     }
 }
@@ -22,7 +18,7 @@ void slidingWindowCPU(cv::Mat img, int h, int w, int stride){
 
 int main(){
 
-    std::string impath {"/home/mvinceslas/coding/cpp_cuda/nvidia_accelerated_computing/sat.png"};
+    std::string impath {"/home/mdhvince/coding/accelerated_computing/sat.png"};
     cv::Mat img = cv::imread(impath, cv::IMREAD_COLOR);
 
     cout<< img.cols << " " << img.rows <<endl;
