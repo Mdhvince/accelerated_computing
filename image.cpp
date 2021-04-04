@@ -13,8 +13,8 @@ void slidingWindowCPU(cv::Mat img, int h, int w, int stride){
             //cv::Mat Roi = img(windows);
 
             cv::rectangle(img, windows, cv::Scalar(255), 1, 8, 0);
-            cv::imshow("Image", img);
-            cv::waitKey(1);
+            // cv::imshow("Image", img);
+            // cv::waitKey(1);
         }
     }
 }
@@ -37,9 +37,11 @@ int main(){
 
     slidingWindowCPU(img, h, w, stride);
 
-    cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
-    cv::imshow("Image", img);
-    cv::waitKey(0);
+    // cv::namedWindow("Image", cv::WINDOW_AUTOSIZE);
+    // cv::imshow("Image", img);
+    // cv::waitKey(0);
+
+    cv::imwrite("test.png", img);
     cv::destroyAllWindows();
 
     std::cout<<"\n\n";
