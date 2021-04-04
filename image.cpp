@@ -37,7 +37,7 @@ int main(){
     // cv::imshow("Image", img);
     // cv::waitKey(0);
 
-    cv::imwrite("test.png", img);
+    cv::imwrite("/home/mdhvince/coding/accelerated_computing/test.png", img);
     cv::destroyAllWindows();
 
     std::cout<<"\n\n";
