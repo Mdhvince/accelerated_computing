@@ -25,9 +25,6 @@ int main()
     
         if (frame.empty())
             break;
-
-
-
         
         cv::imshow("Live", frame);
         if (cv::waitKey(5) >= 0)
