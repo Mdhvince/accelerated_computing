@@ -9,6 +9,6 @@ set(CXX_FLAGS "-Wall")
 find_package(OpenCV REQUIRED)
 
 set(EXECUTABLE app)
-add_executable(${EXECUTABLE} image.cpp)
+add_executable(${EXECUTABLE} camera.cpp)
 
 target_link_libraries(${EXECUTABLE} PRIVATE ${OpenCV_LIBS})
