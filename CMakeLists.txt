@@ -9,6 +9,6 @@ find_package(OpenCV REQUIRED)
 enable_language(CUDA)
 
 set(EXECUTABLE app)
-add_executable(${EXECUTABLE} vectorAdd.cu)
+add_executable(${EXECUTABLE} image.cu)
 
 target_link_libraries(${EXECUTABLE} PRIVATE ${OpenCV_LIBS})
