@@ -1,26 +1,19 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
-#include <iterator>
 #include <cassert>
 
 
-using std::begin;
-using std::end;
-using std::cout;
-using std::endl;
 
 __global__
 void vectorAdd(int *d_a, int *d_b, int *d_c, int N) {
-    int TID = (blockIdx.x * blockDim.x) + threadIdx.x;
+    int thread_id = (blockIdx.x * blockDim.x) + threadIdx.x;
+    int stride = gridDim.x * blockDim.x;
 
-    if(TID < N)
-        d_c[TID] = d_a[TID] + d_b[TID];
+    /* if the grid dimension (threads * blocks)
+       is smaller than N, we can use a stride loop */
 
-    // if the grid dimension (threads * blocks) is smaller than N, we can use a stride loop
-    /*int stride = gridDim.x * blockDim.x
-    for(int i=TID; i<N; i+=stride)
-        d_c[TID] = d_a[TID] + d_b[TID]; */
+    for(int i=thread_id; i<N; i+=stride)
+        d_c[thread_id] = d_a[thread_id] + d_b[thread_id];
 }
 
 void init(int *a, int *b, int N){
@@ -33,12 +26,12 @@ void init(int *a, int *b, int N){
 void checkResult(int *a, int *b, int *c, int N){
     for(int i=0; i < N; i++)
         assert(c[i] = a[i] + b[i]);
-    cout << "SUCCESS" <<endl;
+    std::cout << "SUCCESS" <<std::endl;
 }
 
 int main(){
     int N = 1<<16; // Array size of 2^16 (65536 elts)
-    size_t bytes = N * sizeof(int); // the storage have to take N elts of size int
+    size_t bytes = N * sizeof(int); // Needed memory space
     
     int *h_a, *h_b, *h_c;
     cudaMallocHost(&h_a, bytes);
@@ -48,21 +41,24 @@ int main(){
     init(h_a, h_b, N);
 
 
-    // create some storage to welcome the vectors on the device
+    // create some storage to welcome the arrays on the device
     int *d_a, *d_b, *d_c;
     cudaMalloc(&d_a, bytes);
     cudaMalloc(&d_b, bytes);
     cudaMalloc(&d_c, bytes);
 
-    // now copy initialized vector to the device
+    // (HtoD)
     cudaMemcpy(d_a, h_a, bytes, cudaMemcpyHostToDevice);
     cudaMemcpy(d_b, h_b, bytes, cudaMemcpyHostToDevice);
 
     size_t threads = 1024;
-    size_t blocks = (N + threads - 1) / threads; // to ensure that we will have enough blocks (padding)
-
+    size_t blocks = (N + threads - 1) / threads;  // to ensure that we will have enough blocks (padding)
+    
     vectorAdd<<<blocks, threads>>>(d_a, d_b, d_c, N);
+
+    // (DtoH)
     cudaMemcpy(h_c, d_c, bytes, cudaMemcpyDeviceToHost);
+    
     checkResult(h_a, h_b, h_c, N);
     
     cudaFree(d_a);
